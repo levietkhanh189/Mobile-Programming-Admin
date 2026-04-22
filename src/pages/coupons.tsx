@@ -5,7 +5,7 @@ import { api } from '../api';
 import PageHeader from '../components/page-header';
 import SkeletonTable from '../components/skeleton-table';
 import EmptyState from '../components/empty-state';
-import { fmtVND, fmtDate, fmtNumber } from '../utils/format';
+import { fmtUSD, fmtDate, fmtNumber } from '../utils/format';
 
 type Coupon = {
   id: number;
@@ -170,8 +170,8 @@ export default function Coupons() {
                     </span>
                   </td>
                   <td style={{ fontWeight: 600, color: 'var(--success)' }}>-{c.discount}%</td>
-                  <td>{fmtVND(c.minOrder)}</td>
-                  <td>{c.maxDiscount != null ? fmtVND(c.maxDiscount) : <span style={{ color: 'var(--text-soft)' }}>—</span>}</td>
+                  <td>{fmtUSD(c.minOrder)}</td>
+                  <td>{c.maxDiscount != null ? fmtUSD(c.maxDiscount) : <span style={{ color: 'var(--text-soft)' }}>—</span>}</td>
                   <td>{c.expiresAt ? fmtDate(c.expiresAt) : <span style={{ color: 'var(--text-soft)' }}>Không giới hạn</span>}</td>
                   <td>
                     <span style={{ fontWeight: 600 }}>{fmtNumber(c.usageCount)}</span>
@@ -226,11 +226,11 @@ export default function Coupons() {
                   <input type="number" step="0.01" value={form.discount} onChange={(e) => setForm({ ...form, discount: e.target.value })} required />
                 </div>
                 <div className="form-row">
-                  <label>Đơn tối thiểu (₫)</label>
+                  <label>Đơn tối thiểu ($)</label>
                   <input type="number" value={form.minOrder} onChange={(e) => setForm({ ...form, minOrder: e.target.value })} />
                 </div>
                 <div className="form-row">
-                  <label>Giảm tối đa (₫)</label>
+                  <label>Giảm tối đa ($)</label>
                   <input type="number" value={form.maxDiscount} onChange={(e) => setForm({ ...form, maxDiscount: e.target.value })} />
                 </div>
                 <div className="form-row">

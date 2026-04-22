@@ -6,7 +6,7 @@ import PageHeader from '../components/page-header';
 import SkeletonTable from '../components/skeleton-table';
 import EmptyState from '../components/empty-state';
 import SourcingButtons from '../components/sourcing-buttons';
-import { fmtVND, fmtNumber } from '../utils/format';
+import { fmtUSD, fmtNumber } from '../utils/format';
 import { exportCsv } from '../utils/export-csv';
 
 type Product = {
@@ -214,7 +214,7 @@ export default function Products() {
                       )}
                     </td>
                     <td><span className="badge badge-customer">{p.category}</span></td>
-                    <td style={{ fontWeight: 600 }}>{fmtVND(p.price)}</td>
+                    <td style={{ fontWeight: 600 }}>{fmtUSD(p.price)}</td>
                     <td>
                       {p.discountPercentage > 0 ? (
                         <span className="badge badge-delivered">-{p.discountPercentage}%</span>
@@ -267,7 +267,7 @@ export default function Products() {
               </div>
               <div className="form-grid">
                 <div className="form-row">
-                  <label>Giá (₫) *</label>
+                  <label>Giá ($) *</label>
                   <input type="number" step="0.01" value={form.price} onChange={(e) => setForm({ ...form, price: e.target.value })} required />
                 </div>
                 <div className="form-row">

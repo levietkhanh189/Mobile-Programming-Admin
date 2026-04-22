@@ -8,7 +8,7 @@ import EmptyState from '../components/empty-state';
 import StatusBadge from '../components/status-badge';
 import Avatar from '../components/avatar';
 import SourcingButtons from '../components/sourcing-buttons';
-import { fmtVND, fmtDateTime, fmtNumber } from '../utils/format';
+import { fmtUSD, fmtDateTime, fmtNumber } from '../utils/format';
 import { exportCsv } from '../utils/export-csv';
 import { SOURCING_PLATFORMS, openSourcing } from '../utils/sourcing';
 
@@ -200,7 +200,7 @@ export default function Orders() {
                         </div>
                       </div>
                     </td>
-                    <td style={{ fontWeight: 600 }}>{fmtVND(o.totalAmount)}</td>
+                    <td style={{ fontWeight: 600 }}>{fmtUSD(o.totalAmount)}</td>
                     <td><span className="badge badge-customer">{o.paymentMethod}</span></td>
                     <td><StatusBadge status={o.status} /></td>
                     <td style={{ color: 'var(--text-muted)' }}>{fmtDateTime(o.createdAt)}</td>
@@ -290,8 +290,8 @@ export default function Orders() {
                     <tr key={it.id}>
                       <td style={{ fontWeight: 500 }}>{it.name}</td>
                       <td>{it.quantity}</td>
-                      <td>{fmtVND(it.price)}</td>
-                      <td style={{ fontWeight: 600 }}>{fmtVND(it.price * it.quantity)}</td>
+                      <td>{fmtUSD(it.price)}</td>
+                      <td style={{ fontWeight: 600 }}>{fmtUSD(it.price * it.quantity)}</td>
                       <td>
                         <SourcingButtons query={it.name} size={20} />
                       </td>
@@ -299,7 +299,7 @@ export default function Orders() {
                   ))}
                   <tr>
                     <td colSpan={3} style={{ textAlign: 'right', fontWeight: 600 }}>Tổng cộng</td>
-                    <td style={{ fontWeight: 700, fontSize: 15, color: 'var(--brand-600)' }}>{fmtVND(selected.totalAmount)}</td>
+                    <td style={{ fontWeight: 700, fontSize: 15, color: 'var(--brand-600)' }}>{fmtUSD(selected.totalAmount)}</td>
                     <td />
                   </tr>
                 </tbody>

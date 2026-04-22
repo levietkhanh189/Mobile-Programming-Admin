@@ -18,7 +18,7 @@ import StatCard from '../components/stat-card';
 import PageHeader from '../components/page-header';
 import SkeletonTable from '../components/skeleton-table';
 import StatusBadge from '../components/status-badge';
-import { fmtVND, fmtCompact, fmtNumber } from '../utils/format';
+import { fmtUSD, fmtCompact, fmtNumber } from '../utils/format';
 
 type Summary = {
   today: { orders: number; revenue: number };
@@ -99,28 +99,28 @@ export default function Dashboard() {
       <div className="stats-grid">
         <StatCard
           label="Doanh thu hôm nay"
-          value={fmtVND(summary.today.revenue)}
+          value={fmtUSD(summary.today.revenue)}
           sub={`${summary.today.orders} đơn hôm nay`}
           icon={DollarSign}
           accent="brand"
         />
         <StatCard
           label="Tuần này"
-          value={fmtVND(summary.thisWeek.revenue)}
+          value={fmtUSD(summary.thisWeek.revenue)}
           sub={`${summary.thisWeek.orders} đơn · 7 ngày`}
           icon={ShoppingCart}
           accent="info"
         />
         <StatCard
           label="Tháng này"
-          value={fmtVND(summary.thisMonth.revenue)}
+          value={fmtUSD(summary.thisMonth.revenue)}
           sub={`${summary.thisMonth.orders} đơn · 30 ngày`}
           icon={Package}
           accent="warning"
         />
         <StatCard
           label="AOV (Giá trị TB/đơn)"
-          value={fmtVND(aov)}
+          value={fmtUSD(aov)}
           sub={`${fmtNumber(summary.total.orders)} đơn tổng cộng`}
           icon={Users}
           accent="success"
@@ -155,7 +155,7 @@ export default function Dashboard() {
                   />
                   <Tooltip
                     contentStyle={{ borderRadius: 10, border: '1px solid #e5e7eb', boxShadow: '0 4px 12px rgba(15,23,42,0.08)', fontSize: 12 }}
-                    formatter={(v) => fmtVND(Number(v))}
+                    formatter={(v) => fmtUSD(Number(v))}
                   />
                   <Area type="monotone" dataKey="revenue" stroke="#6366f1" strokeWidth={2.5} fill="url(#grad)" />
                 </AreaChart>
@@ -216,7 +216,7 @@ export default function Dashboard() {
                   <tr key={s.status}>
                     <td><StatusBadge status={s.status} /></td>
                     <td>{fmtNumber(s._count._all)}</td>
-                    <td>{fmtVND(s._sum.totalAmount ?? 0)}</td>
+                    <td>{fmtUSD(s._sum.totalAmount ?? 0)}</td>
                     <td style={{ color: 'var(--text-muted)' }}>{pct}%</td>
                   </tr>
                 );
@@ -249,9 +249,9 @@ export default function Dashboard() {
                   <td style={{ fontWeight: 600, color: 'var(--text-muted)' }}>#{i + 1}</td>
                   <td style={{ fontWeight: 500 }}>{p.name}</td>
                   <td>{p.category}</td>
-                  <td>{fmtVND(p.price)}</td>
+                  <td>{fmtUSD(p.price)}</td>
                   <td>{fmtNumber(p.soldCount)}</td>
-                  <td style={{ fontWeight: 600 }}>{fmtVND(p.totalRevenue)}</td>
+                  <td style={{ fontWeight: 600 }}>{fmtUSD(p.totalRevenue)}</td>
                 </tr>
               ))}
             </tbody>

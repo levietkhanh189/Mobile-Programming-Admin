@@ -1,5 +1,10 @@
-export const fmtVND = (n: number | null | undefined): string =>
-  new Intl.NumberFormat('vi-VN').format(Math.round(n ?? 0)) + '₫';
+export const fmtUSD = (n: number | null | undefined): string =>
+  new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(n ?? 0);
 
 export const fmtNumber = (n: number | null | undefined): string =>
   new Intl.NumberFormat('vi-VN').format(n ?? 0);
