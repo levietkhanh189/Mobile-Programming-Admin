@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react';
-import { Search, Plus, Pencil, Trash2, Download, ImageOff, Package, ExternalLink } from 'lucide-react';
+import { Search, Plus, Pencil, Trash2, Download, ImageOff, Package } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { api } from '../api';
 import PageHeader from '../components/page-header';
 import SkeletonTable from '../components/skeleton-table';
 import EmptyState from '../components/empty-state';
+import SourcingButtons from '../components/sourcing-buttons';
 import { fmtVND, fmtNumber } from '../utils/format';
 import { exportCsv } from '../utils/export-csv';
-import { openAliexpressSearch } from '../utils/aliexpress';
 
 type Product = {
   id: number;
@@ -188,7 +188,8 @@ export default function Products() {
                   <th>Giá</th>
                   <th>Giảm</th>
                   <th>Đã bán</th>
-                  <th style={{ width: 160 }}></th>
+                  <th style={{ width: 130 }}>Tra nguồn</th>
+                  <th style={{ width: 100 }}></th>
                 </tr>
               </thead>
               <tbody>
@@ -223,15 +224,10 @@ export default function Products() {
                     </td>
                     <td>{fmtNumber(p.soldCount)}</td>
                     <td>
+                      <SourcingButtons query={p.name} />
+                    </td>
+                    <td>
                       <div className="actions">
-                        <button
-                          className="icon"
-                          onClick={() => openAliexpressSearch(p.name)}
-                          title="Tra trên AliExpress"
-                          style={{ color: '#ff4747' }}
-                        >
-                          <ExternalLink size={14} />
-                        </button>
                         <button className="icon" onClick={() => openEdit(p)} title="Sửa">
                           <Pencil size={14} />
                         </button>

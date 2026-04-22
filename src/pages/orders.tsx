@@ -7,9 +7,10 @@ import SkeletonTable from '../components/skeleton-table';
 import EmptyState from '../components/empty-state';
 import StatusBadge from '../components/status-badge';
 import Avatar from '../components/avatar';
+import SourcingButtons from '../components/sourcing-buttons';
 import { fmtVND, fmtDateTime, fmtNumber } from '../utils/format';
 import { exportCsv } from '../utils/export-csv';
-import { openAliexpressSearch } from '../utils/aliexpress';
+import { SOURCING_PLATFORMS, openSourcing } from '../utils/sourcing';
 
 type OrderItem = { id: number; name: string; price: number; quantity: number; image: string };
 type Order = {
@@ -83,7 +84,7 @@ export default function Orders() {
     setSelected(res.data.order);
   };
 
-  const lookupOrderOnAliexpress = async (id: string) => {
+  const lookupOrderOnAllPlatforms = async (id: string) => {
     try {
       const res = await api.get(`/admin/orders/${id}`);
       const items: OrderItem[] = res.data.order?.items ?? [];
@@ -91,8 +92,8 @@ export default function Orders() {
         toast.error('Đơn không có sản phẩm');
         return;
       }
-      items.forEach((it) => openAliexpressSearch(it.name));
-      toast.success(`Mở ${items.length} tab AliExpress`);
+      items.forEach((it) => SOURCING_PLATFORMS.forEach((p) => openSourcing(p, it.name)));
+      toast.success(`Mở ${items.length * SOURCING_PLATFORMS.length} tab tra nguồn`);
     } catch {
       toast.error('Không tải được đơn hàng');
     }
@@ -207,8 +208,8 @@ export default function Orders() {
                       <div className="actions">
                         <button
                           className="icon"
-                          onClick={() => lookupOrderOnAliexpress(o.id)}
-                          title="Tra sản phẩm trong đơn trên AliExpress"
+                          onClick={() => lookupOrderOnAllPlatforms(o.id)}
+                          title="Tra tất cả sản phẩm trên AliExpress, Taobao, 1688"
                           style={{ color: '#ff4747' }}
                         >
                           <ExternalLink size={14} />
@@ -262,11 +263,15 @@ export default function Orders() {
                 Sản phẩm đặt ({selected.items.length})
               </div>
               <button
-                onClick={() => selected.items.forEach((it) => openAliexpressSearch(it.name))}
-                title="Mở tab tra cứu từng sản phẩm trên AliExpress"
+                onClick={() =>
+                  selected.items.forEach((it) =>
+                    SOURCING_PLATFORMS.forEach((p) => openSourcing(p, it.name)),
+                  )
+                }
+                title="Mở tất cả sản phẩm trên 3 nền tảng"
                 style={{ color: '#ff4747', borderColor: '#ffd1d1' }}
               >
-                <ExternalLink size={13} /> Tra tất cả trên AliExpress
+                <ExternalLink size={13} /> Tra tất cả (AE · Taobao · 1688)
               </button>
             </div>
             <div className="table-wrap" style={{ marginBottom: 14 }}>
@@ -277,7 +282,7 @@ export default function Orders() {
                     <th>SL</th>
                     <th>Đơn giá</th>
                     <th>Thành tiền</th>
-                    <th style={{ width: 48 }}></th>
+                    <th style={{ width: 130 }}>Tra nguồn</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -288,14 +293,7 @@ export default function Orders() {
                       <td>{fmtVND(it.price)}</td>
                       <td style={{ fontWeight: 600 }}>{fmtVND(it.price * it.quantity)}</td>
                       <td>
-                        <button
-                          className="icon"
-                          onClick={() => openAliexpressSearch(it.name)}
-                          title="Tra trên AliExpress"
-                          style={{ color: '#ff4747' }}
-                        >
-                          <ExternalLink size={13} />
-                        </button>
+                        <SourcingButtons query={it.name} size={20} />
                       </td>
                     </tr>
                   ))}
