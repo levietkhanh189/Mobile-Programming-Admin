@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Download, Eye, Clock, CheckCircle2, Truck, Package, PackageCheck, XCircle, ShoppingBag } from 'lucide-react';
+import { Download, Eye, Clock, CheckCircle2, Truck, Package, PackageCheck, XCircle, ShoppingBag, ExternalLink } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { api } from '../api';
 import PageHeader from '../components/page-header';
@@ -9,6 +9,7 @@ import StatusBadge from '../components/status-badge';
 import Avatar from '../components/avatar';
 import { fmtVND, fmtDateTime, fmtNumber } from '../utils/format';
 import { exportCsv } from '../utils/export-csv';
+import { openAliexpressSearch } from '../utils/aliexpress';
 
 type OrderItem = { id: number; name: string; price: number; quantity: number; image: string };
 type Order = {
@@ -231,10 +232,28 @@ export default function Orders() {
               </div>
             </div>
 
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
+              <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--text)' }}>
+                Sản phẩm đặt ({selected.items.length})
+              </div>
+              <button
+                onClick={() => selected.items.forEach((it) => openAliexpressSearch(it.name))}
+                title="Mở tab tra cứu từng sản phẩm trên AliExpress"
+                style={{ color: '#ff4747', borderColor: '#ffd1d1' }}
+              >
+                <ExternalLink size={13} /> Tra tất cả trên AliExpress
+              </button>
+            </div>
             <div className="table-wrap" style={{ marginBottom: 14 }}>
               <table>
                 <thead>
-                  <tr><th>Sản phẩm</th><th>SL</th><th>Đơn giá</th><th>Thành tiền</th></tr>
+                  <tr>
+                    <th>Sản phẩm</th>
+                    <th>SL</th>
+                    <th>Đơn giá</th>
+                    <th>Thành tiền</th>
+                    <th style={{ width: 48 }}></th>
+                  </tr>
                 </thead>
                 <tbody>
                   {selected.items.map((it) => (
@@ -243,11 +262,22 @@ export default function Orders() {
                       <td>{it.quantity}</td>
                       <td>{fmtVND(it.price)}</td>
                       <td style={{ fontWeight: 600 }}>{fmtVND(it.price * it.quantity)}</td>
+                      <td>
+                        <button
+                          className="icon"
+                          onClick={() => openAliexpressSearch(it.name)}
+                          title="Tra trên AliExpress"
+                          style={{ color: '#ff4747' }}
+                        >
+                          <ExternalLink size={13} />
+                        </button>
+                      </td>
                     </tr>
                   ))}
                   <tr>
                     <td colSpan={3} style={{ textAlign: 'right', fontWeight: 600 }}>Tổng cộng</td>
                     <td style={{ fontWeight: 700, fontSize: 15, color: 'var(--brand-600)' }}>{fmtVND(selected.totalAmount)}</td>
+                    <td />
                   </tr>
                 </tbody>
               </table>
