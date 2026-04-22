@@ -83,6 +83,21 @@ export default function Orders() {
     setSelected(res.data.order);
   };
 
+  const lookupOrderOnAliexpress = async (id: string) => {
+    try {
+      const res = await api.get(`/admin/orders/${id}`);
+      const items: OrderItem[] = res.data.order?.items ?? [];
+      if (items.length === 0) {
+        toast.error('Đơn không có sản phẩm');
+        return;
+      }
+      items.forEach((it) => openAliexpressSearch(it.name));
+      toast.success(`Mở ${items.length} tab AliExpress`);
+    } catch {
+      toast.error('Không tải được đơn hàng');
+    }
+  };
+
   const updateStatus = async (id: string, newStatus: string) => {
     try {
       await api.put(`/admin/orders/${id}/status`, { status: newStatus });
@@ -168,7 +183,7 @@ export default function Orders() {
                   <th>Thanh toán</th>
                   <th>Trạng thái</th>
                   <th>Ngày đặt</th>
-                  <th style={{ width: 100 }}></th>
+                  <th style={{ width: 120 }}></th>
                 </tr>
               </thead>
               <tbody>
@@ -189,9 +204,19 @@ export default function Orders() {
                     <td><StatusBadge status={o.status} /></td>
                     <td style={{ color: 'var(--text-muted)' }}>{fmtDateTime(o.createdAt)}</td>
                     <td>
-                      <button className="icon ghost" onClick={() => openDetail(o.id)} title="Chi tiết">
-                        <Eye size={15} />
-                      </button>
+                      <div className="actions">
+                        <button
+                          className="icon"
+                          onClick={() => lookupOrderOnAliexpress(o.id)}
+                          title="Tra sản phẩm trong đơn trên AliExpress"
+                          style={{ color: '#ff4747' }}
+                        >
+                          <ExternalLink size={14} />
+                        </button>
+                        <button className="icon ghost" onClick={() => openDetail(o.id)} title="Chi tiết">
+                          <Eye size={15} />
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))}
